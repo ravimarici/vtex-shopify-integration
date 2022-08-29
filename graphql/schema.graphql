@@ -1,0 +1,78 @@
+type Query {
+    getShop(apiKey:String,apiPassword:String,shopifyStoreName:String):[ShopResponse]
+    getSellers(sellerId:String,size:Int):[SellerResponse]
+}
+
+type SellerResponse {
+  sellerId: String
+  sellerName: String
+  sellerEmail: String
+  sellerAddress:String
+  storeName:String
+  apiKey:String
+  apiPassword:String
+}
+type Mutation {
+  createSellerOnMarketplace(apiKey:String,apiPassword:String,shopifyStoreName:String): [MutationResponse]
+  syncProductsWithMarketplace(apiKey:String,apiPassword:String,shopifyStoreName:String):ShopResponse
+}
+
+type MutationResponse {
+  id: String
+  status: String
+  message: String
+}
+
+input SellerInput {
+  SellerId: String!
+  Name: String!
+  Email: String!
+  Description: String
+  ExchangeReturnPolicy: String
+  DeliveryPolicy: String
+  UseHybridPaymentOptions: Boolean!
+  UserName: String
+  Password: String
+  SecutityPrivacyPolicy: String
+  CNPJ: String
+  CSCIdentification: String!
+  ArchiveId: String
+  UrlLogo: String
+  ProductCommissionPercentage: Float!
+  FreightCommissionPercentage: Float!
+  FulfillmentEndpoint: String!
+  CatalogSystemEndpoint: String!
+  IsActive: Boolean
+  FulfillmentSellerId: String
+  SellerType: Int
+  IsBetterScope: Boolean
+}
+
+type Seller {
+  SellerId: String
+  Name: String
+  Email: String
+  Description: String
+  ExchangeReturnPolicy: String
+  DeliveryPolicy: String
+  UseHybridPaymentOptions: Boolean
+  UserName: String
+  Password: String
+  SecutityPrivacyPolicy: String
+  CNPJ: String
+  CSCIdentification: String
+  ArchiveId: String
+  UrlLogo: String
+  ProductCommissionPercentage: Float
+  FreightCommissionPercentage: Float
+  FulfillmentEndpoint: String
+  CatalogSystemEndpoint: String
+  IsActive: Boolean
+  FulfillmentSellerId: String
+  SellerType: Int
+  IsBetterScope: Boolean
+}
+
+type ShopResponse{
+    id:String
+}
