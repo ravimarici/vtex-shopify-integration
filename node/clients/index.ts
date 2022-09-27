@@ -4,6 +4,7 @@ import LogisticsClient  from './logistics'
 import {Catalog,Suggestions } from '@vtex/clients'
 import SkuBindingsClient from './SkuBindings'
 import PricesClient from './Prices'
+import { ExternalSeller } from './ExternalSeller'
 
 // Extend the default IOClients implementation with our own custom clients.
 export class Clients extends IOClients {
@@ -29,6 +30,10 @@ export class Clients extends IOClients {
 
     public get prices(){
         return this.getOrSet('Prices',PricesClient)
+    }
+
+    public get externalSeller() {
+        return this.getOrSet('External Seler',ExternalSeller)
     }
 
 }

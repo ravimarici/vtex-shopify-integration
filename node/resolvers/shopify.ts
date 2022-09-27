@@ -139,12 +139,15 @@ export const resolvers = {
                     ctx.status = 304
                     
                 } catch (e) {
-                    if (e.response.status === 404) {
+                    
+                    if ( //@ts-ignore 
+                        e.response.status === 404) {
                       suggestion.sendSkuSuggestion(item,token)            
                       ctx.body = 'Suggestion was successfully sent'
                       ctx.status = 200                
                     } else {
-                      // eslint-disable-next-line no-console
+                      // eslint-disable-next-line no-console 
+                     //@ts-ignore
                       console.log(`Error: ${e.response.message}`)
                     }
                   }
@@ -169,8 +172,7 @@ export const resolvers = {
                 ctx:any)=>{
                 const {
                     clients:{
-                        ShopifyShop,
-                        catalog,
+                        ShopifyShop,                        
                         myLogistics,
                         skuBindings
                     }
@@ -203,11 +205,71 @@ export const resolvers = {
                         
                         return myLogistics.updateInventoryBySkuIdAndWarehouseId(item.skuId,'1_1',item.inventory);
                     }catch(e){
+                        //@ts-ignore
                         console.log(`Error: ${e.response.message}`)
                     }
                })
 
-            }
+            },
+        syncPricesWithMarketplace:async(_:any,
+                {
+                    apiKey,
+                    apiPassword,
+                    shopifyStoreName,
+                    sellerId
+                        }:
+                {   
+                    apiKey:String,
+                    apiPassword:String,
+                    shopifyStoreName:String,
+                    sellerId:String
+                   },
+                    ctx:any)=>{
+                    const {
+                        clients:{
+                            ShopifyShop,                        
+                            prices,
+                            skuBindings
+                        }
+                    } = ctx
+    
+                    const shopifyProducts = await ShopifyShop.
+                                                    getProducts(apiKey,apiPassword,shopifyStoreName)
+                    const allSkuBindings = await skuBindings.
+                                                    listSkuBindingsBySellerId('61852483746')
+                    let PriceUpdate:any = []
+                   await shopifyProducts?.products.map((item:any)=>{
+                        item.variants.map((variants:any)=>{
+                           allSkuBindings.filter((Bindings:any)=>(Bindings.SellerStockKeepingUnitId == variants.id))
+                            .map((tempItem:any)=>{
+                                PriceUpdate.push( 
+                                            {   
+                                                skuId:tempItem.StockKeepingUnitId,
+                                                price:{
+                                                    costPrice:Number(variants.price),                            
+                                                    markup: 0
+                                                    
+                                                }
+                                            })
+                                        })
+                            
+                            })
+                   })
+
+                   console.log(PriceUpdate)
+                   const token = 'ADMIN_TOKEN'
+
+                   PriceUpdate?.forEach((item:any)=>{
+                        try{
+                            
+                            return prices.updatePricesBySkuId(item.skuId,item.price,token);
+                        }catch(e){
+                            //@ts-ignore
+                            console.log(`Error: ${e.response.message}`)
+                        }
+                   })
+    
+                }
         
     }
 }

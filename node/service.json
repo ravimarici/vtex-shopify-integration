@@ -1,0 +1,19 @@
+{
+    "memory": 256,
+    "ttl": 10,
+    "timeout": 2,
+    "minReplicas": 2,
+    "maxReplicas": 4,
+    "workers": 1,
+    "routes": {
+      "fullfilmentSimulation": {
+        "path": "/:sellerName/pvt/orderForms/simulation",
+        "public": true
+      },
+      "orderPlacement": {
+        "path": "/:sellerName/pvt/orders",
+        "public": true
+      }
+    }
+  }
+  

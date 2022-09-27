@@ -41,5 +41,20 @@ export default class PricesClient extends ExternalClient  {
       getRequestConfig(this.context, authMethod, metric, tracingConfig)
     )
   }
+
+  public updatePricesBySkuId(
+    SkuId: string,
+    body:any,
+    authMethod: AuthMethod = 'AUTH_TOKEN',
+    tracingConfig?: RequestTracingConfig
+  ) {
+    const metric = 'pricing-getPricingBySku'
+
+    return this.http.put<any>(
+      routes.getPriceBySkuId(SkuId),
+      body,
+      getRequestConfig(this.context, authMethod, metric, tracingConfig)
+    )
+  }
   
 }
